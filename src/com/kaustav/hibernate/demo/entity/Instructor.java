@@ -1,5 +1,8 @@
 package com.kaustav.hibernate.demo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -44,6 +48,9 @@ public class Instructor {
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="instructor_detail_id")
 	private InstructorDetail instructor_detail;
+	
+	@OneToMany(mappedBy="instructor", cascade= {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	private List<Course> courses;
 
 	public InstructorDetail getInstructor_detail() {
 		return instructor_detail;
@@ -105,12 +112,33 @@ public class Instructor {
 
 
 
+	
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "Instructor [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
 				+ ", instructor_detail=" + instructor_detail + "]";
 	}
 
-	
+	public void add(Course course) {
+		if(courses == null) {
+			courses = new ArrayList<>();
+		}
+		
+		courses.add(course);
+		
+		course.setInstructor(this);
+	}
 	
 }

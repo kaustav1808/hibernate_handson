@@ -8,7 +8,7 @@ import com.kaustav.hibernate.demo.entity.Course;
 import com.kaustav.hibernate.demo.entity.Instructor;
 import com.kaustav.hibernate.demo.entity.InstructorDetail;
 
-public class CreateOneToOneDemo {
+public class BiderectionCreateOneToOneDemo {
 
 	public static void main(String[] args) {
 		SessionFactory factory = new Configuration()
@@ -23,13 +23,17 @@ public class CreateOneToOneDemo {
 		try {
 			session.beginTransaction();
 
-			Instructor instructor = new Instructor("Kaustav", "Bhattacharya", "kasutav.bhattacharya@email.com");
+			Instructor instructor = session.get(Instructor.class, 1);
 			
-			InstructorDetail detail = new InstructorDetail("https://www.youtube.com/watch?v=lKKsjpH09dU&ab_channel=freeCodeCamp.org", "coding");
 			
-			instructor.setInstructor_detail(detail);
+			Course course1 = new Course("java spring");
+			Course course2 = new Course("spring boot");
 			
-			session.save(instructor);
+			instructor.add(course1);
+			instructor.add(course2);
+			
+			session.save(course1);
+			session.save(course2);
 
 			session.getTransaction().commit();
 
